@@ -1,0 +1,9 @@
+- route:
+    from:
+      uri: knative:channel/chat-channel
+      steps:
+        - to:
+            uri: vertx-websocket:websocket-server:8080//chat-server
+      parameters:
+        reply: false
+        exchangePattern: InOnly

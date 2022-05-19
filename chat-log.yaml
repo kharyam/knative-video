@@ -1,0 +1,6 @@
+- from:
+    uri: knative:channel/chat-channel
+    steps:
+      - log:
+          message: ${body}
+          loggingLevel: INFO

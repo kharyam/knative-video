@@ -1,0 +1,10 @@
+- from:
+    uri: 'rest:put:/message:'
+    steps:
+      - log:
+          message: 'Received chat message via HTTP PUT: ''${body}'''
+          loggingLevel: INFO
+      - to:
+          uri: knative:channel/chat-channel
+    parameters:
+      exchangePattern: InOnly

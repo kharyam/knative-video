@@ -1,0 +1,11 @@
+
+- from:
+    uri: vertx-websocket://chat-server
+    steps:
+    - log:
+        message: 'Received message: ''${body}'''
+        loggingLevel: INFO
+    - to:
+        uri: vertx-websocket://chat-server
+    # parameters:
+    #     exchangePattern: InOnly
