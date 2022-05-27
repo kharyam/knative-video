@@ -1,0 +1,17 @@
+from ubi8
+
+EXPOSE 8080
+
+ENV WEBSOCKET_URL UNSET
+ENV REST_URL UNSET
+
+RUN dnf install -y python3 && mkdir /content && chmod 775 /content
+ADD index.html chat.js config_template.js /content/
+ADD css/ /content/css/
+ADD start.sh /
+RUN chmod 774 /start.sh
+WORKDIR /content
+
+USER 1001
+
+CMD /start.sh

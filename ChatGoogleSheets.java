@@ -12,8 +12,6 @@ import java.util.function.Supplier;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.model.language.SimpleExpression;
-import org.apache.camel.support.DefaultRegistry;
 
 public class ChatGoogleSheets extends RouteBuilder {
   @Override
@@ -24,30 +22,47 @@ public class ChatGoogleSheets extends RouteBuilder {
     String clientSecret = System.getenv("CLIENT_SECRET");
     String refreshToken =  System.getenv("REFRESH_TOKEN");
 
-    // Write your routes here, for example:
-    // RouteDefinition rd = from("timer:java?period=3000")
     RouteDefinition rd = from("knative:channel/chat-channel")
       .routeId("ChatLogGoogleSheets")
       .log("Processing ${body}")
-      .setHeader("CamelGoogleSheets.valueInputOption", constant("USER_ENTERED"));
+      .to("direct:setRow");
+      
 
-      Supplier s = new Supplier<ValueRange>() {
-        @Override
-        public ValueRange get() {
-          ValueRange vr = new ValueRange();
-          ArrayList rows = new ArrayList<ArrayList<String>>();
-          ArrayList row = new ArrayList<String>();
-          row.add(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG).format(ZonedDateTime.now()));
-          row.add("This is a new row");
-          rows.add(row);
-          vr.setValues(rows);
-          return vr;
+    Supplier valueSupplier = new Supplier<ValueRange>() {
+
+      private String message;
+
+      public void setMessage(String message) {
+        this.message=message;
+      }
+
+      @Override
+      public ValueRange get() {
+        if (message == null) {
+          return null;
         }
-      };
+
+        ValueRange values = new ValueRange();
+        ArrayList rows = new ArrayList<ArrayList<String>>();
+        ArrayList row = new ArrayList<String>();
+        row.add(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG).format(ZonedDateTime.now()));
+        String [] components = this.message.split(":");
+        row.add(components[0].trim());
+        row.add(components[1].trim());
+        rows.add(row);
+        values.setValues(rows);
+        return values;
+      }
+    };
+
+    getContext().getRegistry().bind("valueSupplier", valueSupplier);
+
+    from("direct:setRow").setHeader("CamelGoogleSheets.valueInputOption", constant("USER_ENTERED"))
+      .bean("valueSupplier","setMessage")
+      .setHeader("CamelGoogleSheets.values", valueSupplier)
+      .to("google-sheets://data/append?range=" + range 
+        + "&clientId=" + clientId + "&clientSecret=" + clientSecret
+        + "&refreshToken=" + refreshToken);
+  }
   
-      rd.setHeader("CamelGoogleSheets.values", s)
-        .to("google-sheets://data/append?range=" + range 
-          + "&clientId=" + clientId + "&clientSecret=" + clientSecret
-          + "&refreshToken=" + refreshToken);
-        }
 }

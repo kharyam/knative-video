@@ -1,0 +1,70 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="css/patternfly.css">
+  <link rel="stylesheet" href="css/patternfly-addons.css">
+  <script src="config.js"></script>
+  <script src="chat.js"></script>
+</head>
+
+<body>
+
+  <header class="pf-c-masthead pf-m-display-inline" id="inline-masthead">
+    <span class="pf-c-masthead__toggle">
+      <button
+        class="pf-c-button pf-m-plain"
+        type="button"
+        aria-label="Global navigation"
+      >
+        <i class="fas fa-bars" aria-hidden="true"></i>
+      </button>
+    </span>
+    <div class="pf-c-masthead__main">
+      <a class="pf-c-masthead__brand" href="https://github.com">Chat Server</a>
+    </div>
+    <div class="pf-c-masthead__content">
+      <span>Knative Kafka Camel-K Demo</span>
+    </div>
+  </header>
+
+  <form novalidate class="pf-c-form pf-m-horizontal" name="chat">
+      <div class="pf-c-form__group-label">
+        <label class="pf-c-form__label" for="chat-area">
+          <span class="pf-c-form__label-text">Chat Log</span>
+        </label>
+
+        <textarea class="pf-c-form-control" name="chatarea" id="chatarea" aria-label="Chat Aria" rows="10"
+          readonly=true></textarea>
+
+      </div>
+
+      <div class="pf-c-form__group">
+        <label class="pf-c-form__label" for="chatname">
+          <span class="pf-c-form__label-text">Your Name</span>
+          <span class="pf-c-form__label-required" aria-hidden="true">&#42;</span>
+        </label>
+        <div class="pf-c-form__group-control">
+          <textarea class="pf-c-form-control"  name="chatname" id="chatname" required rows=1 validated='error'false></textarea>
+        </div>
+      </div>
+
+      <div class="pf-c-form__group">
+        <label class="pf-c-form__label" for="messagearea">
+          <span class="pf-c-form__label-text">Message</span>
+          <span class="pf-c-form__label-required" aria-hidden="true">&#42;</span>
+        </label>
+        <textarea class="pf-c-form-control" name="messagearea" id="messagearea" aria-label="Message Aria" rows="2"
+          value="Type your message" required></textarea>
+
+      </div>
+
+      <div class="pf-c-form__group">
+        <button class="pf-c-button pf-m-primary" type="button" onclick='sendMessage()'>Send</button>
+      </div>
+
+    </div>
+  </form>
+  
+</body>
+
+</html>
