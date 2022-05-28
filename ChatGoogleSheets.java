@@ -13,21 +13,24 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 
 import org.apache.camel.model.RouteDefinition;
 
+/**
+ * This class implements a route which reads data of the format
+ * "user: message" from a knative channel then appends the timestamp,
+ * username, and message as a new row in a google doc.
+ */
 public class ChatGoogleSheets extends RouteBuilder {
   @Override
   public void configure() throws Exception {
 
+    // Append data at the end of existing rows starting at cell A1
     String range = "A1";
+
+    // Google authentication credentials.
     String clientId = System.getenv("CLIENT_ID");
     String clientSecret = System.getenv("CLIENT_SECRET");
     String refreshToken =  System.getenv("REFRESH_TOKEN");
 
-    RouteDefinition rd = from("knative:channel/chat-channel")
-      .routeId("ChatLogGoogleSheets")
-      .log("Processing ${body}")
-      .to("direct:setRow");
-      
-
+    // A Custom Supplier instance to represent a row in a google doc.
     Supplier valueSupplier = new Supplier<ValueRange>() {
 
       private String message;
@@ -55,11 +58,18 @@ public class ChatGoogleSheets extends RouteBuilder {
       }
     };
 
+    // Add object to Camel Registry
     getContext().getRegistry().bind("valueSupplier", valueSupplier);
 
-    from("direct:setRow").setHeader("CamelGoogleSheets.valueInputOption", constant("USER_ENTERED"))
+    /////////////////
+    // Camel route //
+    /////////////////
+    from("knative:channel/chat-channel")
+      .routeId("ChatLogGoogleSheets")
+      .log("Processing ${body}")
       .bean("valueSupplier","setMessage")
       .setHeader("CamelGoogleSheets.values", valueSupplier)
+      .setHeader("CamelGoogleSheets.valueInputOption", constant("USER_ENTERED"))
       .to("google-sheets://data/append?range=" + range 
         + "&clientId=" + clientId + "&clientSecret=" + clientSecret
         + "&refreshToken=" + refreshToken);
