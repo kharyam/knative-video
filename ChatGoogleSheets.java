@@ -11,8 +11,6 @@ import java.util.function.Supplier;
 
 import com.google.api.services.sheets.v4.model.ValueRange;
 
-import org.apache.camel.model.RouteDefinition;
-
 /**
  * This class implements a route which reads data of the format
  * "user: message" from a knative channel then appends the timestamp,
@@ -31,7 +29,7 @@ public class ChatGoogleSheets extends RouteBuilder {
     String refreshToken =  System.getenv("REFRESH_TOKEN");
 
     // A Custom Supplier instance to represent a row in a google doc.
-    Supplier valueSupplier = new Supplier<ValueRange>() {
+    Supplier<ValueRange> valueSupplier = new Supplier<ValueRange>() {
 
       private String message;
 
@@ -46,8 +44,8 @@ public class ChatGoogleSheets extends RouteBuilder {
         }
 
         ValueRange values = new ValueRange();
-        ArrayList rows = new ArrayList<ArrayList<String>>();
-        ArrayList row = new ArrayList<String>();
+        ArrayList<ArrayList<String>> rows = new ArrayList<ArrayList<String>>();
+        ArrayList<String> row = new ArrayList<String>();
         row.add(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG).format(ZonedDateTime.now()));
         String [] components = this.message.split(":");
         row.add(components[0].trim());
