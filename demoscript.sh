@@ -31,7 +31,7 @@ pe 'oc expose svc/websocket-server'
 
 pe 'kamel run chat-websocket.yaml --logs'
 
-pe 'kn service create chat-webapp --image=image-registry.openshift-image-registry.svc:5000/chat-server/chat-webapp@sha256:2aef187431ca973e9668f40dd87e22856c7fb923521496f6c096af67bb8fbfcb --scale=1..5 -e WEBSOCKET_URL=ws://websocket-server-chat-server.apps-crc.testing/chat-server -e REST_URL=http://chat-rest-chat-server.apps-crc.testing/message/'
+pe 'kn service create chat-webapp --image=quay.io/kharyam/chat-webapp:latest --scale=1..5 -e WEBSOCKET_URL=ws://websocket-server-chat-server.apps-crc.testing/chat-server -e REST_URL=http://chat-rest-chat-server.apps-crc.testing/message/'
 
 pe "kamel run ChatGoogleSheets.java \
 -e CLIENT_ID=$CLIENT_ID \

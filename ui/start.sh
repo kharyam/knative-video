@@ -1,5 +1,7 @@
 #!/bin/bash
 
+trap 'echo "Received SIGTERM, exiting. ; exit 0' SIGTERM
+
 if [ -z $WEBSOCKET_URL ] || [ -z $REST_URL ] || [ $WEBSOCKET_URL == "UNSET" ] || [ $REST_URL == "UNSET" ]
     then
         echo "WEBSOCKET_URL and REST_URL most both be set."
