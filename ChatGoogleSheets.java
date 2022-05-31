@@ -19,6 +19,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
  */
 public class ChatGoogleSheets extends RouteBuilder {
   @Override
+
   public void configure() throws Exception {
 
     // Append data at the end of existing rows starting at cell A1
@@ -49,9 +50,9 @@ public class ChatGoogleSheets extends RouteBuilder {
         List<List<Object>> rows = new ArrayList();
         List<Object> row = new ArrayList<Object>();
         row.add(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG).format(ZonedDateTime.now()));
-        String [] components = this.message.split(":");
-        row.add(components[0].trim());
-        row.add(components[1].trim());
+        String [] messageParts = this.message.split(":");
+        row.add(messageParts[0].trim());
+        row.add(messageParts[1].trim());
         rows.add(row);
         values.setValues(rows);
         return values;
@@ -67,7 +68,7 @@ public class ChatGoogleSheets extends RouteBuilder {
     from("knative:channel/chat-channel")
       .routeId("ChatLogGoogleSheets")
       .log("Processing ${body}")
-      .bean("valueSupplier","setMessage")
+      .bean("valueSupplier", "setMessage")
       .setHeader("CamelGoogleSheets.values", valueSupplier)
       .setHeader("CamelGoogleSheets.valueInputOption", constant("USER_ENTERED"))
       .to("google-sheets://data/append?spreadsheetId=" + spreadhseetID
