@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.google.api.services.sheets.v4.model.ValueRange;
@@ -27,9 +28,10 @@ public class ChatGoogleSheets extends RouteBuilder {
     String clientId = System.getenv("CLIENT_ID");
     String clientSecret = System.getenv("CLIENT_SECRET");
     String refreshToken =  System.getenv("REFRESH_TOKEN");
+    String spreadhseetID = System.getenv("SPREADSHEET_ID");
 
     // A Custom Supplier instance to represent a row in a google doc.
-    Supplier<ValueRange> valueSupplier = new Supplier<ValueRange>() {
+    Supplier<Object> valueSupplier = new Supplier<Object>() {
 
       private String message;
 
@@ -38,14 +40,14 @@ public class ChatGoogleSheets extends RouteBuilder {
       }
 
       @Override
-      public ValueRange get() {
+      public Object get() {
         if (message == null) {
           return null;
         }
 
         ValueRange values = new ValueRange();
-        ArrayList<ArrayList<String>> rows = new ArrayList<ArrayList<String>>();
-        ArrayList<String> row = new ArrayList<String>();
+        List<List<Object>> rows = new ArrayList();
+        List<Object> row = new ArrayList<Object>();
         row.add(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG).format(ZonedDateTime.now()));
         String [] components = this.message.split(":");
         row.add(components[0].trim());
@@ -68,8 +70,10 @@ public class ChatGoogleSheets extends RouteBuilder {
       .bean("valueSupplier","setMessage")
       .setHeader("CamelGoogleSheets.values", valueSupplier)
       .setHeader("CamelGoogleSheets.valueInputOption", constant("USER_ENTERED"))
-      .to("google-sheets://data/append?range=" + range 
-        + "&clientId=" + clientId + "&clientSecret=" + clientSecret
+      .to("google-sheets://data/append?spreadsheetId=" + spreadhseetID
+        + "&range=" + range 
+        + "&clientId=" + clientId 
+        + "&clientSecret=" + clientSecret
         + "&refreshToken=" + refreshToken);
   }
   
