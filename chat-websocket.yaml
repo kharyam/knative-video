@@ -1,5 +1,0 @@
-- from:
-    uri: knative:channel/chat-channel
-    steps:
-      - to:
-          uri: vertx-websocket:websocket-server:8080/chat-server
