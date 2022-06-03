@@ -4,7 +4,7 @@
 . ~/bin/demo-magic.sh
 
 # Update OCP banner
-oc patch ConsoleNotification security-notice -p '{"spec":{"backgroundColor":"purple","text":"Camel-K Integration Demo"}}' --type=merge
+oc apply -f ConsoleNotification.yaml
 
 clear
 
@@ -38,8 +38,8 @@ pe 'kamel run websocket-server.groovy --trait knative-service.enabled=true --tra
 websocket_url=$(kn service list | grep websocket-server | awk '{print $2}' | sed s/https/ws/)/chat-server
 
 # Create chat-websocket.yaml if it does not exist
-if [! -f chat-websocket.yaml ]; then
-  sed -e "s|WEBSOCKET_SERVER|$websocket_url)|g" -e 's|ws://||g' chat-websocket-template.yaml > chat-websocket.yaml
+if [ ! -f chat-websocket.yaml ]; then
+  sed -e "s|WEBSOCKET_SERVER|$websocket_url|g" -e 's|ws://||g' chat-websocket-template.yaml > chat-websocket.yaml
 fi
 
 pe 'kamel run chat-websocket.yaml --trait knative-service.min-scale=1 --logs'
