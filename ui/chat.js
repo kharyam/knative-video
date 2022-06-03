@@ -1,16 +1,24 @@
 let webSocketUrl = config.webSocketUrl;
 let restUrl = config.restUrl;
 
-let socket = new WebSocket(webSocketUrl);
+let socket = null;
 
+function init(){
+  socket = new WebSocket(webSocketUrl);
+  // handle incoming messages
+  socket.onmessage = function(event) {
+    let incomingMessage = event.data;
+    showMessage(incomingMessage);
+  };
 
-// handle incoming messages
-socket.onmessage = function(event) {
-  let incomingMessage = event.data;
-  showMessage(incomingMessage);
-};
+  socket.onclose = event => {
+    console.log(`Websocket closed ${event.code}. Reopening`);
+    init();
+  }
 
-socket.onclose = event => console.log(`Closed ${event.code}`);
+}
+
+init();
 
 // show message in chat area
 function showMessage(message) {
@@ -22,17 +30,23 @@ function showMessage(message) {
     return;
   }
 
-// Convert blob to string
-const reader = new FileReader();
-// This fires after the blob has been read/loaded.
-reader.addEventListener('loadend', (e) => {
-    const text = e.srcElement.result;
-    showMessage(text);
-});
+  // Convert blob to string
+  const reader = new FileReader();
+  // This fires after the blob has been read/loaded.
+  reader.addEventListener('loadend', (e) => {
+      const text = e.srcElement.result;
+      showMessage(text);
+  });
 
-// Start reading the blob as text.
-reader.readAsText(message);
+  // Start reading the blob as text.
+  reader.readAsText(message);
 
+}
+
+function addEmoji(emoji) {
+  messageArea = document.getElementById('messagearea');
+
+  messageArea.value += emoji;
 }
 
 function sendMessage() {

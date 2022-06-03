@@ -52,7 +52,7 @@ public class ChatGoogleSheets extends RouteBuilder {
         row.add(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG).format(ZonedDateTime.now()));
         String [] messageParts = this.message.split(":");
         row.add(messageParts[0].trim());
-        row.add(messageParts[1].trim());
+        row.add("'" + messageParts[1].trim());
         rows.add(row);
         values.setValues(rows);
         return values;
