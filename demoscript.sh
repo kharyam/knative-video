@@ -46,8 +46,10 @@ websocket_url=$(kn service list | grep websocket-server | awk '{print $2}' | sed
 # If wscat (https://www.npmjs.com/package/wscat) is installed, test out the websocket server
 which wscat
 if [ $? == 0 ]; then
-pe "wscat -c $websocket_url"
+  pe "wscat -c $websocket_url"
 fi
+
+rm chat-websocket.yaml
 
 # Create chat-websocket.yaml if it does not exist
 if [ ! -f chat-websocket.yaml ]; then
@@ -60,9 +62,9 @@ pe "kn service create chat-webapp --image=quay.io/kharyam/chat-webapp:latest --s
 
 pe "xdg-open https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}"
 
-pe "kamel run ChatGoogleSheets.java \
--e CLIENT_ID=$CLIENT_ID \
--e CLIENT_SECRET=$CLIENT_SECRET \
--e REFRESH_TOKEN=$REFRESH_TOKEN \
--e SPREADSHEET_ID=$SPREADSHEET_ID --trait knative-service.min-scale=1 --logs"
+pe "kamel run ChatGoogleSheets.java\
+ -e CLIENT_ID=$CLIENT_ID\
+ -e CLIENT_SECRET=$CLIENT_SECRET\
+ -e REFRESH_TOKEN=$REFRESH_TOKEN\
+ -e SPREADSHEET_ID=$SPREADSHEET_ID --trait knative-service.min-scale=1 --logs"
 
