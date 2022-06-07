@@ -9,4 +9,4 @@ fi
 cp config_template.js config.js
 sed -i -e "s|WEBSOCKET_URL|${WEBSOCKET_URL}|g" -e "s|REST_URL|${REST_URL}|g" config.js
 
-python3 -m http.server 8080 
+exec python3 -m http.server 8080
