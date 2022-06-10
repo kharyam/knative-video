@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Customization to demo-magic script to change the prompt text
+PROMPT_STRING="CamelK Integration"
+
+# Location of the chat webapp image. You can perform an image build (via podman or docker) in the ui subdirectory
+# to build the image then push it to the location of your choice. Update that location below.
+CHAT_WEBAPP_IMAGE=quay.io/kharyam/chat-webapp:latest
+
 # Use demo magic script (https://github.com/paxtonhare/demo-magic) to simulate typing in the terminal via its 'pe' command
 . ~/bin/demo-magic.sh
 
@@ -24,6 +31,8 @@ pe "oc get IntegrationPlatform"
 pe "kamel install"
 
 pe "oc get ip"
+
+cd integrations
 
 pe "kamel run chat-log.yaml --logs"
 
@@ -58,9 +67,7 @@ fi
 
 pe 'kamel run chat-websocket.yaml --trait knative-service.min-scale=1 --logs'
 
-pe "kn service create chat-webapp --image=quay.io/kharyam/chat-webapp:latest --scale=1..5 -e WEBSOCKET_URL=$websocket_url -e REST_URL=$chat_rest_url"
-
-pe "xdg-open https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}"
+pe "kn service create chat-webapp --image=${CHAT_WEBAPP_IMAGE} --scale=1..5 -e WEBSOCKET_URL=$websocket_url -e REST_URL=$chat_rest_url"
 
 pe "kamel run ChatGoogleSheets.java\
  -e CLIENT_ID=$CLIENT_ID\
@@ -68,3 +75,4 @@ pe "kamel run ChatGoogleSheets.java\
  -e REFRESH_TOKEN=$REFRESH_TOKEN\
  -e SPREADSHEET_ID=$SPREADSHEET_ID --trait knative-service.min-scale=1 --logs"
 
+pe "xdg-open https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}"
