@@ -76,3 +76,5 @@ pe "kamel run ChatGoogleSheets.java\
  -e SPREADSHEET_ID=$SPREADSHEET_ID --trait knative-service.min-scale=1 --logs"
 
 pe "xdg-open https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}"
+
+pe "# 🎉🎉 All Done! 🎉🎉"
