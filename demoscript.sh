@@ -8,19 +8,40 @@ PROMPT_STRING="CamelK Integration"
 CHAT_WEBAPP_IMAGE=quay.io/kharyam/chat-webapp:latest
 
 # Use demo magic script (https://github.com/paxtonhare/demo-magic) to simulate typing in the terminal via its 'pe' command
+
+if [[ ! -d $HOME/bin ]]
+then
+mkdir $HOME/bin
+fi
+
+if [[ ! -f $HOME/bin/demo-magic.sh ]]
+then
 git clone https://github.com/paxtonhare/demo-magic.git
 cp demo-magic/demo-magic.sh ~/bin
 chmod +x ~/bin/demo-magic.sh
+fi
+
+if [[ ! -f /usr/bin/pv ]]
+then 
 sudo cp ivarch.repo /etc/yum.repos.d/ivarch.repo
 sudo rpm --import http://www.ivarch.com/personal/public-key.txt
 sudo dnf install -y pv
+fi
+
+if [[ ! -f $HOME/bin/kamel ]]
+then
 curl -L https://mirror.openshift.com/pub/openshift-v4/clients/camel-k/1.8.2/camel-k-client-1.8.2-linux-64bit.tar.gz -o camel.tar.gz
 tar -xzvf camel.tar.gz
 cp kamel ~/bin
+fi
 
+if [[ ! -f $HOME/bin/kn ]]
+then
 curl https://kn-openshift-serverless.$(oc get ingresses.config/cluster -o jsonpath={.spec.domain})/kn-linux-amd64.tar.gz -o kn.tgz
 tar -xzvf kn.tgz
 mv kn ~/bin
+fi
+
 . ~/bin/demo-magic.sh
 
 # Update OCP banner
