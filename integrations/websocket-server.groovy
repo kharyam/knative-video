@@ -1,3 +1,3 @@
-from('vertx-websocket://chat-server').to('log:info')
+from('vertx-websocket:localhost:8080/chat-server').to('log:info')
     .setHeader('CamelVertxWebsocket.sendToAll',simple('true'))
-    .to('vertx-websocket://chat-server')
+    .to('vertx-websocket:localhost:8080/chat-server')

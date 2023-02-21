@@ -87,7 +87,7 @@ pe "curl -X PUT -H 'content-type: application/text' -d 'D. Vader: I am your fath
 
 pe "curl -X PUT -H 'content-type: application/text' -d 'L. Skywalker: Nooooooooooooo!' $chat_rest_url"
 
-pe 'kamel run websocket-server.groovy --trait knative-service.enabled=true --trait knative-service.min-scale=1 --logs'
+pe 'kamel run -d mvn:org.apache.camel:camel-vertx-websocket:3.14.2 websocket-server.groovy --trait knative-service.enabled=true --trait knative-service.min-scale=1 --logs'
 
 # Retreive the URL for the websocket server 
 websocket_url=$(kn service list | grep websocket-server | awk '{print $2}' | sed s/https/ws/):80/chat-server
