@@ -10,7 +10,7 @@ CHAT_WEBAPP_IMAGE=quay.io/kharyam/chat-webapp:latest
 # Use demo magic script (https://github.com/paxtonhare/demo-magic) to simulate typing in the terminal via its 'pe' command
 # git clone https://github.com/paxtonhare/demo-magic.git
 # cp demo-magic/demo-magic.sh ~/bin
-# chmod +x ~/bin/demo-magic-sh
+# chmod +x ~/bin/demo-magic.sh
 # sudo dnf install -y pv
 # https://kn-openshift-serverless.apps.cluster-pbwsn.pbwsn.sandbox493.opentlc.com/kn-linux-amd64.tar.gz
 # https://mirror.openshift.com/pub/openshift-v4/clients/camel-k/1.8.2/camel-k-client-1.8.2-linux-64bit.tar.gz
