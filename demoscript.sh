@@ -42,6 +42,12 @@ tar -xzvf kn.tgz
 mv kn ~/bin
 fi
 
+if [[ ! =f /usr/local/bin/wscate ]]
+then
+sudo dnf install -y npm
+sudo npm install -g wscat
+fi
+
 . ~/bin/demo-magic.sh
 
 # Update OCP banner
