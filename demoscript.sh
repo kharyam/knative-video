@@ -42,7 +42,7 @@ tar -xzvf kn.tgz
 mv kn ~/bin
 fi
 
-if [[ ! =f /usr/local/bin/wscate ]]
+if [[ ! -f /usr/local/bin/wscat ]]
 then
 sudo dnf install -y npm
 sudo npm install -g wscat
